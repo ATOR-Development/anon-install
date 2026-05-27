@@ -36,7 +36,7 @@ if [[ "$(uname)" == "Linux" ]];then
 
 	kill $(pgrep anon) > /dev/null 2>&1
 	unzip -o anon-live-linux-$(dpkg --print-architecture).zip anon > /dev/null 2>&1
-	echo -e "SocksPort 127.0.0.1:9055\nSocksPolicy accept 127.0.0.1\nSocksPolicy reject *\nHTTPTunnelPort auto" > anonrc
+	echo -e "SocksPort 127.0.0.1:9055\nSocksPolicy accept 127.0.0.1\nSocksPolicy reject *\nHTTPTunnelPort auto\nDataDirectory ~/.anon" > anonrc
 	./anon -f anonrc --agree-to-terms | grep Bootstrapped &
 	sleep 1
 	gsettings set org.gnome.system.proxy mode "manual"
@@ -56,6 +56,8 @@ if [[ "$(uname)" == "Linux" ]];then
 	echo -e "\n${BLUE_ANON}======================================================${NOCOLOR}"
     echo -e "${CYAN}                ANON Proxy activated                   ${NOCOLOR}"
     echo -e "${BLUE_ANON}======================================================${NOCOLOR}\n"
+
+    curl -s https://dns.ec.anyone.tech/tld/anyone > ~/.anon/anyone_hosts
 
 	while true; do
 		echo -e "${RED}Press Cmd+C to terminate proxy${NOCOLOR}"

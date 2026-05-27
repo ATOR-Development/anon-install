@@ -32,7 +32,6 @@ if [[ "$(sw_vers --productName)" == "macOS" ]];then
 	
 	unzip -o anon-live-macos-$(uname -p)64.zip anon > /dev/null 2>&1	
 	kill $(pgrep anon) > /dev/null 2>&1
-	curl -s https://dns.ec.anyone.tech/tld/anyone > ~/.anon/anyone_hosts
 	echo -e "SocksPort 127.0.0.1:9055\nSocksPolicy accept 127.0.0.1\nSocksPolicy reject *\nHTTPTunnelPort auto\nDataDirectory ~/.anon" > anonrc	
 	./anon -f anonrc --agree-to-terms | grep "Bootstrapped" &	
 	sleep 1	
@@ -52,6 +51,8 @@ if [[ "$(sw_vers --productName)" == "macOS" ]];then
 	echo -e "\n${BLUE_ANON}======================================================${NOCOLOR}"
 	echo -e "${CYAN}                  ANON Proxy activated                    ${NOCOLOR}"
 	echo -e "${BLUE_ANON}======================================================${NOCOLOR}\n"
+
+	curl -s https://dns.ec.anyone.tech/tld/anyone > ~/.anon/anyone_hosts
     
 	while true; do
 		echo -e "${RED}Press Cmd+C to terminate proxy${NOCOLOR}"

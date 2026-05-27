@@ -17,6 +17,7 @@ if [[ "$(sw_vers --productName)" == "macOS" ]];then
 		
 		kill $(pgrep anon) > /dev/null 2>&1		
 		rm anon anonrc
+		rm -r ./proxy-data
 		
 		echo -e "\n${BLUE_ANON}======================================================${NOCOLOR}"
 		echo -e "${RED}                 ANON Proxy terminated                       ${NOCOLOR}"
@@ -31,8 +32,10 @@ if [[ "$(sw_vers --productName)" == "macOS" ]];then
 	echo -e "${BLUE_ANON}======================================================${NOCOLOR}\n"
 	
 	unzip -o anon-live-macos-$(uname -p)64.zip anon > /dev/null 2>&1	
-	kill $(pgrep anon) > /dev/null 2>&1	
-	echo -e "SocksPort 127.0.0.1:9055\nSocksPolicy accept 127.0.0.1\nSocksPolicy reject *\nHTTPTunnelPort auto" > anonrc	
+	kill $(pgrep anon) > /dev/null 2>&1
+	mkdir ./proxy-data
+	curl -s https://dns.ec.anyone.tech/tld/anyone > ./proxy-data/anyone_hosts
+	echo -e "SocksPort 127.0.0.1:9055\nSocksPolicy accept 127.0.0.1\nSocksPolicy reject *\nHTTPTunnelPort auto\nDataDirectory ./proxy-data" > anonrc	
 	./anon -f anonrc --agree-to-terms | grep "Bootstrapped" &	
 	sleep 1	
 	networksetup -setsocksfirewallproxy "Wi-Fi" 127.0.0.1 9055

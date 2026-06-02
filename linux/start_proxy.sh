@@ -17,8 +17,6 @@ if [[ "$(uname)" == "Linux" ]];then
 		gsettings reset org.gnome.system.proxy.socks host
 		gsettings reset org.gnome.system.proxy.socks port
 
-		kill $(pgrep anon) > /dev/null 2>&1
-		#rm anon-live-linux-$(dpkg --print-architecture).zip
 		rm anon
 		rm anonrc
 
@@ -47,17 +45,18 @@ if [[ "$(uname)" == "Linux" ]];then
 	CheckAnon=$(curl -s --socks5 127.0.0.1:9055 https://check.en.anyone.tech/api/ip)
 	ExitIP="$(echo $CheckAnon | cut -d'"' -f6)"
 	IsAnon="$(echo $CheckAnon | cut -d':' -f2 | cut -d',' -f1)"
-	ExitCountry="$(curl --socks4 127.0.0.1:9055 -s https://ipinfo.io | grep country | cut -d'"' -f4)"
+	ExitCountry="$(curl --socks5 127.0.0.1:9055 -s https://ipinfo.io | grep country | cut -d'"' -f4)"
 
 	echo -e "\n${BLUE_ANON}======================================================${NOCOLOR}\n"
 	echo -e "Exit IP: $ExitIP"
 	echo -e "Exit Country: $ExitCountry"
 	echo -e "Is Anon: $IsAnon"
 	echo -e "\n${BLUE_ANON}======================================================${NOCOLOR}"
-    echo -e "${CYAN}                ANON Proxy activated                   ${NOCOLOR}"
-    echo -e "${BLUE_ANON}======================================================${NOCOLOR}\n"
+	echo -e "${CYAN}                ANON Proxy activated                   ${NOCOLOR}"
+	echo -e "${BLUE_ANON}======================================================${NOCOLOR}\n"
 
-    curl -s https://dns.ec.anyone.tech/tld/anyone > ~/.anon/anyone_hosts
+	curl -s --socks5-hostname 127.0.0.1:9055 http://dns-live-1.anyone.anyone/tld/anyone > /tmp/anyone_hosts
+	cp /tmp/anyone_hosts ~/.anon/anyone_hosts
 
 	while true; do
 		echo -e "${RED}Press Cmd+C to terminate proxy${NOCOLOR}"
